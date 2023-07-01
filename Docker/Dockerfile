@@ -1,10 +1,12 @@
-FROM octahub.8lab.cn:5000/base/cicd-go:v1.18.2
+#FROM octahub.8lab.cn:5000/base/cicd-go:v1.18.2
+FROM octahub.8lab.cn:5000/base/ubuntu:18.04
 MAINTAINER devcli-server
 ### sources.list from http://140.143.184.36/ octa main
 #COPY sources.list /etc/apt/sources.list
-RUN mkdir /data/devcli
-COPY ./ /data/devcli
-COPY entrypoint.sh /usr/bin/entrypoint.sh
+RUN mkdir -p /data/devcli/conf
+COPY ./conf/tsconfig.json /data/devcli/conf/
+COPY ./web-socket-show /data/devcli/
+COPY ./Docker/entrypoint.sh /usr/bin/entrypoint.sh
 #COPY neighbors /iri/conf/neighbors
 
 #RUN apt-get update && apt-get install -y --force-yes pypy vim libmysqlclient-dev python-dev python-pip curl libblas-dev liblapack-dev libatlas-base-dev gfortran 

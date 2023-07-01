@@ -25,7 +25,7 @@ type log struct {
 
 type web struct {
 	Waddr string `json:"web_addr"`
-	wport string `json:"web_port"`
+	Wport string `json:"web_port"`
 }
 
 var Cfg *Config = nil
@@ -40,9 +40,11 @@ func ParserConfig(configPath string) error {
 	defer file.Close()
 	reader := bufio.NewReader(file)
 	decoder := json.NewDecoder(reader)
+
 	if err = decoder.Decode(&Cfg); err != nil {
 		fmt.Println("init config error:", err.Error())
 		return err
 	}
+	//println(Cfg.Sever.Saddr)
 	return nil
 }

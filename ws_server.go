@@ -16,6 +16,7 @@ func ConfigInit() {
 		fmt.Printf("Error: %#v\n", err)
 		//panic(err)
 	}
+
 }
 
 //var port *int = flag.Int("p", 9070, "Port to listen.")
@@ -131,7 +132,9 @@ func jsonServer(ws *websocket.Conn) {
 
 //web sever main function.
 func MainServer(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, `<html>
+	serverPort, _ := strconv.Atoi(conf.Cfg.Sever.Sport)
+	serverAddr := conf.Cfg.Sever.Saddr
+	webstr := `<html>
 <head>
 <script type="text/javascript">
 var path;
@@ -146,7 +149,7 @@ function init() {
    console.log("path:" + path);
    var div = document.getElementById("msg");
    div.innerText = "path:" + path + "\n" + div.innerText;
-   ws = new WebSocket("ws://0.0.0.0:9055" + path);
+   ws = new WebSocket("ws://%v:%v" + path);
    if (path == "/sendRecvBlob") {
      ws.binaryType = "blob";
    } else if (path == "/sendRecvArrayBuffer") {
@@ -220,7 +223,10 @@ function send() {
 </form>
 <div id="msg"></div>
 </html>
-`)
+`
+	fmt.Printf(webstr, serverAddr, serverPort)
+	//fmt.Printf(webstr, "192.168.24.20", serverPort)
+	io.WriteString(w, fmt.Sprintf(webstr, serverAddr, serverPort))
 }
 
 //test server main
@@ -228,7 +234,9 @@ func main() {
 	flag.Parse()
 	ConfigInit()
 	serverPort, _ := strconv.Atoi(conf.Cfg.Sever.Sport)
-	serverAddr, _ := strconv.Atoi(conf.Cfg.Sever.Saddr)
+	serverAddr := conf.Cfg.Sever.Saddr
+	//webPort, _ := strconv.Atoi(conf.Cfg.Web.Wport)
+	//webAddr:= conf.Cfg.Web.Waddr
 
 	http.Handle("/copy", websocket.Handler(copyServer))
 	http.Handle("/readWrite", websocket.Handler(readWriteServer))
@@ -237,8 +245,11 @@ func main() {
 	http.Handle("/sendRecvBlob", websocket.Handler(sendRecvBinaryServer))
 	http.Handle("/json", websocket.Handler(jsonServer))
 	http.HandleFunc("/", MainServer)
+	//println(serverAddr)
 	fmt.Printf("http://%v:%v/\n", serverAddr, serverPort)
-	err := http.ListenAndServe(fmt.Sprintf("%v:%v", serverAddr, serverPort), nil)
+	//fmt.Printf("http://%v:%v/\n", webAddr, webPort)
+	err := http.ListenAndServe(fmt.Sprintf("%v:%v", serverAddr, serverPort),
+		nil)
 	if err != nil {
 		panic("ListenANdServe: " + err.Error())
 	}
