@@ -1,0 +1,14 @@
+{
+  "sever": {
+    "svr_port": "9055",
+    "svr_addr": "0.0.0.0"
+  },
+  "log": {
+    "log_path": "/var/log/8lab",
+    "log_level": "error"
+  },
+  "web": {
+    "web_port": "9033",
+    "web_addr": "0.0.0.0"
+  }
+}
