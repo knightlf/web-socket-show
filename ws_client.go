@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-var port *int = flag.Int("p", 9061, "Port to listen.")
+var port *int = flag.Int("p", 9033, "Port to listen.")
 
 //http://10.1.1.13:9080/ws/
 //10.1.1.14:9197/ws
@@ -28,7 +28,7 @@ function init() {
    console.log("path:" + path);
    var div = document.getElementById("msg");
    div.innerText = "path:" + path + "\n" + div.innerText;
-   ws = new WebSocket("ws://101.251.223.186:9070" + path);
+   ws = new WebSocket("ws://0.0.0.0:9055" + path);
    if (path == "/sendRecvBlob") {
      ws.binaryType = "blob";
    } else if (path == "/sendRecvArrayBuffer") {
