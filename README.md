@@ -11,8 +11,9 @@ ws used demo
 
 # VALUE
 
-通过技术社区标准的构建，推动生产力发展，计算资源精准投放，人员成本开销降低，运行更加可靠智能，最终实现IT新基建的变革
+通过技术社区标准的构建，推动生产力发展，计算资源精准投放，成本降低，运行可靠智能，最终实现IT新基建的变革
 
 # HOW TO USE
 
+docker build -t web-socker-show:t1 -f ./Docker/Dockerfile .
 详细使用说明(https://8labteam.github.io/OSCRO_DOCS/)
