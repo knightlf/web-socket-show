@@ -1,7 +1,7 @@
 {
   "sever": {
     "svr_addr": "127.0.0.1",
-    "svr_port": "9055"
+    "svr_port": "9033"
   },
   "log": {
     "log_path": "/var/log/8lab",

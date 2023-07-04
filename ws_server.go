@@ -224,7 +224,7 @@ function send() {
 <div id="msg"></div>
 </html>
 `
-	fmt.Printf(webstr, serverAddr, serverPort)
+	//fmt.Printf(webstr, serverAddr, serverPort)
 	//fmt.Printf(webstr, "192.168.24.20", serverPort)
 	io.WriteString(w, fmt.Sprintf(webstr, serverAddr, serverPort))
 }
@@ -233,10 +233,10 @@ function send() {
 func main() {
 	flag.Parse()
 	ConfigInit()
-	serverPort, _ := strconv.Atoi(conf.Cfg.Sever.Sport)
-	serverAddr := conf.Cfg.Sever.Saddr
-	//webPort, _ := strconv.Atoi(conf.Cfg.Web.Wport)
-	//webAddr:= conf.Cfg.Web.Waddr
+	//serverPort, _ := strconv.Atoi(conf.Cfg.Sever.Sport)
+	//serverAddr := conf.Cfg.Sever.Saddr
+	webPort, _ := strconv.Atoi(conf.Cfg.Web.Wport)
+	webAddr := conf.Cfg.Web.Waddr
 
 	http.Handle("/copy", websocket.Handler(copyServer))
 	http.Handle("/readWrite", websocket.Handler(readWriteServer))
@@ -246,9 +246,9 @@ func main() {
 	http.Handle("/json", websocket.Handler(jsonServer))
 	http.HandleFunc("/", MainServer)
 	//println(serverAddr)
-	fmt.Printf("http://%v:%v/\n", serverAddr, serverPort)
-	//fmt.Printf("http://%v:%v/\n", webAddr, webPort)
-	err := http.ListenAndServe(fmt.Sprintf("%v:%v", serverAddr, serverPort),
+	//fmt.Printf("http://%v:%v/\n", serverAddr, serverPort)
+	fmt.Printf("http://%v:%v/\n", webAddr, webPort)
+	err := http.ListenAndServe(fmt.Sprintf("%v:%v", webAddr, webPort),
 		nil)
 	if err != nil {
 		panic("ListenANdServe: " + err.Error())
