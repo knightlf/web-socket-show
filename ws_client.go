@@ -147,7 +147,7 @@ function init() {
    console.log("path:" + path);
    var div = document.getElementById("msg");
    div.innerText = "path:" + path + "\n" + div.innerText;
-   ws = new WebSocket("ws://0.0.0.0:9055" + path);
+   ws = new WebSocket("ws://%v:%v" + path);
    if (path == "/sendRecvBlob") {
      ws.binaryType = "blob";
    } else if (path == "/sendRecvArrayBuffer") {

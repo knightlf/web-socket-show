@@ -136,6 +136,125 @@ func MainServer(w http.ResponseWriter, req *http.Request) {
 	serverAddr := conf.Cfg.Sever.Saddr
 	webstr := `<html>
 <head>
+<style type="text/css">
+:root{
+	--border-color: #ccc;
+}
+*,body{
+	margin:0;
+	padding: 0;
+	outline:none;
+}
+body{
+	background: radial-gradient(circle at 7.2% 13.6%, rgb(37, 249, 245) 0%, rgb(8, 70, 218) 90%);
+}
+.box-item{
+	padding: 20px;
+	background: rgba(255,255,255,0.5);
+	border-radius: 5px;
+	box-sizing:border-box;
+}
+.container{
+	width: 860px;
+	margin: 0 auto;
+	padding: 40px 0;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	box-sizing: border-box;
+}
+.my-form{
+	display: flex;
+}
+.input-wrap{
+	display: block;
+	flex: 1;
+	margin-right: 10px;
+	height: 40px;
+	line-height: 40px;
+	border: 1px solid var(--border-color);
+	border-radius: 5px;
+	position: relative;
+	padding-left: 168px;
+	padding-right: 80px;
+	overflow: hidden;
+	background: #fff;
+}
+.select{
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 40px;
+	border: none;
+	padding: 0 0px;
+	box-sizing: border-box;
+	display: block;
+	width: 168px;
+	text-align: center;
+	font-size: 14px;
+	color:#22c7d5;
+	border-right: 1px solid var(--border-color);
+}
+.input-text{
+	display: block;
+	width: 100%;
+	height: 100%;
+	border: none;
+	padding: 0 10px;
+	font-size: 16px;
+}
+.input-file-wrap{
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 80px;
+	font-size: 14px;
+	cursor: pointer;
+	height: 100%;
+	text-align: center;
+	border-left: 1px solid var(--border-color);
+	color: #409eff;
+}
+.input-file-wrap input{
+	opacity: 0;
+	position: absolute;
+	width: 200%;
+	height: 100%;
+	top: 0;
+	left: -70px;
+	cursor: pointer;
+	z-index: 9;
+	display: block;
+	color: transparent;
+}
+.btn-send{
+	width: 100px;
+	height: 40px;
+	border: none;
+	color: #fff;
+	font-size: 16px;
+	border-radius: 5px;
+	background: #409eff;
+	cursor:pointer;
+}
+.btn-send:hover,.input-file-wrap:hover{
+	opacity:0.8;
+}
+.msg-container{
+	margin-top: 20px;
+	min-height: 360px;
+	font-size: 15px;
+	line-height: 1.5em;
+	color: #333;
+	letter-spacing: 1px;
+	height: 500px;
+	flex: 1;
+	overflow: auto;
+}
+.msg-wrap{
+	min-height:200px;
+}
+</style>
 <script type="text/javascript">
 var path;
 var ws;
@@ -208,8 +327,10 @@ function send() {
 };
 </script>
 <body onLoad="init();">
-<form name="msgform" action="#" onsubmit="return send();">
-<select onchange="init()" name="path">
+<div class="container">
+<form name="msgform" action="#" onsubmit="return send();" class="my-form box-item">
+<div class="input-wrap">
+<select class="select" onchange="init()" name="path">
 <option value="/copy" selected="selected">/copy</option>
 <option value="/readWrite">/readWrite</option>
 <option value="/sendRecvText">/sendRecvText</option>
@@ -217,11 +338,15 @@ function send() {
 <option value="/sendRecvBlob">/sendRecvBlob</option>
 <option value="/json">/json</option>
 </select>
-<input type="text" name="message" size="80" value="">
-<input type="file" name="file" >
-<input type="submit" value="send">
+<input class="input-text" type="text" name="message" size="80" value="" />
+<div class="input-file-wrap">选择文件<input type="file" name="file" /></div>
+</div>
+<input class="btn-send" type="submit" value="send" />
 </form>
-<div id="msg"></div>
+<div class="msg-container">
+<div class="msg-wrap box-item" id="msg"></div>
+</div>
+</div>
 </html>
 `
 	//fmt.Printf(webstr, serverAddr, serverPort)
