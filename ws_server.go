@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 	"web-socket-show/conf"
 )
 
@@ -132,7 +133,8 @@ func jsonServer(ws *websocket.Conn) {
 
 //web sever main function.
 func MainServer(w http.ResponseWriter, req *http.Request) {
-	serverPort, _ := strconv.Atoi(conf.Cfg.Sever.Sport)
+	//serverPort, _ := strconv.Atoi(conf.Cfg.Sever.Sport)
+	serverPort := conf.Cfg.Sever.Sport
 	serverAddr := conf.Cfg.Sever.Saddr
 	webstr := `<html>
 <head>
@@ -268,7 +270,7 @@ function init() {
    console.log("path:" + path);
    var div = document.getElementById("msg");
    div.innerText = "path:" + path + "\n" + div.innerText;
-   ws = new WebSocket("ws://%v:%v" + path);
+   ws = new WebSocket("ws://(((svrip)))" + path);
    if (path == "/sendRecvBlob") {
      ws.binaryType = "blob";
    } else if (path == "/sendRecvArrayBuffer") {
@@ -349,9 +351,13 @@ function send() {
 </div>
 </html>
 `
+	//(((svrip))):(((svrport)))  --->  serverAddr:serverPort
+	svrip := serverAddr + ":" + serverPort
+	strings.Replace(webstr, "(((svrip)))", svrip, -1)
 	//fmt.Printf(webstr, serverAddr, serverPort)
 	//fmt.Printf(webstr, "192.168.24.20", serverPort)
-	io.WriteString(w, fmt.Sprintf(webstr, serverAddr, serverPort))
+	//io.WriteString(w, fmt.Sprintf(webstr, serverAddr, serverPort))
+	io.WriteString(w, strings.Replace(webstr, "(((svrip)))", svrip, -1))
 }
 
 //test server main
