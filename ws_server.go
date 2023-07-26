@@ -337,7 +337,7 @@ function send() {
 <option value="/readWrite">/readWrite</option>
 <option value="/sendRecvText">/sendRecvText</option>
 <option value="/sendRecvArrayBuffer">/sendRecvArrayBuffer</option>
-<option value="/sendRecvBlob">/sendRecvBlob</option>
+<option value="/sendRecvBlob">/sendSun</option>
 <option value="/json">/json</option>
 </select>
 <input class="input-text" type="text" name="message" size="80" value="" />
@@ -353,7 +353,7 @@ function send() {
 `
 	//(((svrip))):(((svrport)))  --->  serverAddr:serverPort
 	svrip := serverAddr + ":" + serverPort
-	strings.Replace(webstr, "(((svrip)))", svrip, -1)
+	//strings.Replace(webstr, "(((svrip)))", svrip, -1)
 	//fmt.Printf(webstr, serverAddr, serverPort)
 	//fmt.Printf(webstr, "192.168.24.20", serverPort)
 	//io.WriteString(w, fmt.Sprintf(webstr, serverAddr, serverPort))
