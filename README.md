@@ -1,6 +1,7 @@
 # web-socket-show
 ws used demo
 
+fix 
 
 # Release Notes
 
@@ -12,6 +13,14 @@ ws used demo
 # VALUE
 
 通过技术社区标准的构建，推动生产力发展，计算资源精准投放，成本降低，运行可靠智能，最终实现IT新基建的变革
+
+
+# Configure
+
+修改和挂载，对应的 ./conf/tsconfig.json
+
+实现不同场景的转发
+
 
 # HOW TO USE
 
