@@ -22,6 +22,8 @@ fix  sun
 
 实现不同场景的转发
 
+默认镜像位置：
+/data/devcli/conf/tsconfig.json
 
 # HOW TO USE
 
