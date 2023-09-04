@@ -13,6 +13,7 @@ fix  sun
 # VALUE
 
 通过技术社区标准的构建，推动生产力发展，计算资源精准投放，成本降低，运行可靠智能，最终实现IT新基建的变革
+![image](https://github.com/knightlf/web-socket-show/assets/11308793/864272c3-84d2-42a7-a43d-2ab45b44af67)
 
 
 # Configure
@@ -21,6 +22,8 @@ fix  sun
 
 实现不同场景的转发
 
+默认镜像位置：
+/data/devcli/conf/tsconfig.json
 
 # HOW TO USE
 
