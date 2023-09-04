@@ -8,7 +8,9 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 	"web-socket-show/conf"
+	"web-socket-show/pkg/db"
 )
 
 // ConfigInit 配置文件初始化
@@ -20,12 +22,32 @@ func ConfigInit() {
 
 }
 
+//make id of the Msg struct
+func makeid() int64 {
+	ts := time.Now().Unix()
+	return ts
+}
+
 //var port *int = flag.Int("p", 9070, "Port to listen.")
 
 // copyServer echoes back messages sent from client using io.Copy.
 func copyServer(ws *websocket.Conn) {
 	fmt.Printf("copyServer %#v\n", ws.Config())
+
 	io.Copy(ws, ws)
+	//var buf string
+	//err := websocket.Message.Send(ws, buf)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	msg := db.Msg{Id: time.Now().Unix(),
+		Select: "copyServer",
+		Send:   "&websocket.Dial()"}
+	errinsert := db.InsertOper(msg)
+	if errinsert != nil {
+		fmt.Println(errinsert)
+	}
+
 	fmt.Println("copyServer finished")
 }
 
@@ -50,6 +72,13 @@ func readWriteServer(ws *websocket.Conn) {
 			break
 		}
 		fmt.Printf("send:%q\n", buf[:n])
+		msg := db.Msg{Id: time.Now().Unix(),
+			Select: "readWriteServer",
+			Send:   string(buf[:n])}
+		errinsert := db.InsertOper(msg)
+		if errinsert != nil {
+			fmt.Println(errinsert)
+		}
 	}
 	fmt.Println("readWriteServer finished")
 
@@ -75,7 +104,15 @@ func sendRecvServer(ws *websocket.Conn) {
 			fmt.Println(err)
 			break
 		}
+
 		fmt.Printf("send:%q\n", buf)
+		msg := db.Msg{Id: time.Now().Unix(),
+			Select: "sendRecvServer",
+			Send:   buf}
+		errinsert := db.InsertOper(msg)
+		if errinsert != nil {
+			fmt.Println(errinsert)
+		}
 	}
 	fmt.Println("sendRecvServer finished")
 }
@@ -100,6 +137,13 @@ func sendRecvBinaryServer(ws *websocket.Conn) {
 			break
 		}
 		fmt.Printf("send:%#v\n", buf)
+		msg := db.Msg{Id: time.Now().Unix(),
+			Select: "sendRecvBinaryServer",
+			Send:   string(buf)}
+		errinsert := db.InsertOper(msg)
+		if errinsert != nil {
+			fmt.Println(errinsert)
+		}
 	}
 	fmt.Println("sendRecvBinaryServer finished")
 }
@@ -128,10 +172,18 @@ func jsonServer(ws *websocket.Conn) {
 			break
 		}
 		fmt.Printf("send:%#v\n", msg)
+		msgCk := db.Msg{Id: time.Now().Unix(),
+			Select: "jsonServer",
+			Send:   msg.Msg + " $$$ " + msg.Path}
+		errinsert := db.InsertOper(msgCk)
+		if errinsert != nil {
+			fmt.Println(errinsert)
+		}
 	}
 }
 
 //web sever main function.
+
 func MainServer(w http.ResponseWriter, req *http.Request) {
 	//serverPort, _ := strconv.Atoi(conf.Cfg.Sever.Sport)
 	serverPort := conf.Cfg.Sever.Sport

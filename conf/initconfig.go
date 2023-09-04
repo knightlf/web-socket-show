@@ -8,9 +8,10 @@ import (
 )
 
 type Config struct {
-	Sever sever
-	Web   web
-	Log   log
+	Sever    sever
+	Web      web
+	Log      log
+	Ckconfig ckconfig
 }
 
 type sever struct {
@@ -28,11 +29,22 @@ type web struct {
 	Wport string `json:"web_port"`
 }
 
+type ckconfig struct {
+	Host             []string `json:"host"`
+	Username         string   `json:"username"`
+	Password         string   `json:"password"`
+	DatabaseName     string   `json:"databaseName"`
+	CompressionLevel int      `json:"compressionLevel"` // 10
+	OnCluster        string   `json:"onCluster"`
+	UserMaxMemUsage  int64    `json:"userMaxMemUsage"` // 1073741824 = 1G
+}
+
 var Cfg *Config = nil
 
 func ParserConfig(configPath string) error {
 	currentPath, _ := os.Getwd()
 	path := currentPath + configPath
+	//println(path)
 	file, err := os.Open(path)
 	if err != nil {
 		panic(err)
@@ -45,6 +57,6 @@ func ParserConfig(configPath string) error {
 		fmt.Println("init config error:", err.Error())
 		return err
 	}
-	//println(Cfg.Sever.Saddr)
+	//println(Cfg.Ckconfig.Host)
 	return nil
 }

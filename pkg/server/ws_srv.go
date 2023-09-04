@@ -1,19 +1,142 @@
-package main
+package server
 
 import (
 	"flag"
 	"fmt"
+	"golang.org/x/net/websocket"
 	"io"
 	"net/http"
+	"strconv"
+	"strings"
+	"web-socket-show/conf"
 )
 
-var port *int = flag.Int("p", 9033, "Port to listen.")
+// ConfigInit 配置文件初始化
+func ConfigInit() {
+	if err := conf.ParserConfig("/conf/tsconfig.json"); err != nil {
+		fmt.Printf("Error: %#v\n", err)
+		//panic(err)
+	}
 
-//http://10.1.1.13:9080/ws/
-//10.1.1.14:9197/ws
-//ws://101.251.223.186:9197
+}
+
+//var port *int = flag.Int("p", 9070, "Port to listen.")
+
+// copyServer echoes back messages sent from client using io.Copy.
+func copyServer(ws *websocket.Conn) {
+	fmt.Printf("copyServer %#v\n", ws.Config())
+	io.Copy(ws, ws)
+	fmt.Println("copyServer finished")
+}
+
+// readWriteServer echoes back messages sent from client using Read and Write.
+func readWriteServer(ws *websocket.Conn) {
+	fmt.Printf("readWriteServer %#v\n", ws.Config())
+	for {
+		buf := make([]byte, 100)
+		// Read at most 100 bytes.  If client sends a message more than
+		// 100 bytes, first Read just reads first 100 bytes.
+		// Next Read will read next at most 100 bytes.
+		n, err := ws.Read(buf)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf("recv:%q\n", buf[:n])
+		// Write send a message to the client.
+		n, err = ws.Write(buf[:n])
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf("send:%q\n", buf[:n])
+	}
+	fmt.Println("readWriteServer finished")
+
+}
+
+// sendRecvSell
+//rver echoes back text messages sent from client
+// using websocket.Message.
+func sendRecvServer(ws *websocket.Conn) {
+	fmt.Printf("sendRecvServer %#v\n", ws)
+	for {
+		var buf string
+		// Receive receives a text message from client, since buf is string.
+		err := websocket.Message.Receive(ws, &buf)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf("recv:%q\n", buf)
+		// Send sends a text message to client, since buf is string.
+		err = websocket.Message.Send(ws, buf)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf("send:%q\n", buf)
+	}
+	fmt.Println("sendRecvServer finished")
+}
+
+// sendRecvBinaryServer echoes back binary messages sent from clent
+// using websocket.Message.
+// Note that chrome supports binary messaging in 15.0.874.* or later.
+func sendRecvBinaryServer(ws *websocket.Conn) {
+	fmt.Printf("sendRecvBinaryServer %#v\n", ws)
+	for {
+		var buf []byte
+		// Receive receives a binary message from client, since buf is []byte.
+		err := websocket.Message.Receive(ws, &buf)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Printf("recv:%#v\n", buf)
+		// Send sends a binary message to client, since buf is []byte.
+		err = websocket.Message.Send(ws, buf)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf("send:%#v\n", buf)
+	}
+	fmt.Println("sendRecvBinaryServer finished")
+}
+
+type T struct {
+	Msg  string
+	Path string
+}
+
+// jsonServer echoes back json string sent from client using websocket.JSON.
+func jsonServer(ws *websocket.Conn) {
+	fmt.Printf("jsonServer %#v\n", ws.Config())
+	for {
+		var msg T
+		// Receive receives a text message serialized T as JSON.
+		err := websocket.JSON.Receive(ws, &msg)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf("recv:%#v\n", msg)
+		// Send send a text message serialized T as JSON.
+		err = websocket.JSON.Send(ws, msg)
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Printf("send:%#v\n", msg)
+	}
+}
+
+//web sever main function.
 func MainServer(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, `<html>
+	//serverPort, _ := strconv.Atoi(conf.Cfg.Sever.Sport)
+	serverPort := conf.Cfg.Sever.Sport
+	serverAddr := conf.Cfg.Sever.Saddr
+	webstr := `<html>
 <head>
 <style type="text/css">
 :root{
@@ -147,7 +270,7 @@ function init() {
    console.log("path:" + path);
    var div = document.getElementById("msg");
    div.innerText = "path:" + path + "\n" + div.innerText;
-   ws = new WebSocket("ws://%v:%v" + path);
+   ws = new WebSocket("ws://(((svrip)))" + path);
    if (path == "/sendRecvBlob") {
      ws.binaryType = "blob";
    } else if (path == "/sendRecvArrayBuffer") {
@@ -214,7 +337,7 @@ function send() {
 <option value="/readWrite">/readWrite</option>
 <option value="/sendRecvText">/sendRecvText</option>
 <option value="/sendRecvArrayBuffer">/sendRecvArrayBuffer</option>
-<option value="/sendRecvBlob">/sendRecvBlob</option>
+<option value="/sendRecvBlob">/sendSunshiping</option>
 <option value="/json">/json</option>
 </select>
 <input class="input-text" type="text" name="message" size="80" value="" />
@@ -227,16 +350,37 @@ function send() {
 </div>
 </div>
 </html>
-`)
+`
+	//(((svrip))):(((svrport)))  --->  serverAddr:serverPort
+	svrip := serverAddr + ":" + serverPort
+	//strings.Replace(webstr, "(((svrip)))", svrip, -1)
+	//fmt.Printf(webstr, serverAddr, serverPort)
+	//fmt.Printf(webstr, "192.168.24.20", serverPort)
+	//io.WriteString(w, fmt.Sprintf(webstr, serverAddr, serverPort))
+	io.WriteString(w, strings.Replace(webstr, "(((svrip)))", svrip, -1))
 }
 
-//test main
+//test server main
 func main() {
 	flag.Parse()
+	ConfigInit()
+	serverPort, _ := strconv.Atoi(conf.Cfg.Sever.Sport)
+	serverAddr := conf.Cfg.Sever.Saddr
+	// ws = new WebSocket("ws://(((svrip)))" + path);
+	//webPort, _ := strconv.Atoi(conf.Cfg.Web.Wport)
+	//webAddr := conf.Cfg.Web.Waddr
 
-	http.HandleFunc("/", MainServer)
-	fmt.Printf("http://0.0.0.0:%d/\n", *port)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", *port), nil)
+	http.Handle("/copy", websocket.Handler(copyServer))
+	http.Handle("/readWrite", websocket.Handler(readWriteServer))
+	http.Handle("/sendRecvText", websocket.Handler(sendRecvServer))
+	http.Handle("/sendRecvArrayBuffer", websocket.Handler(sendRecvBinaryServer))
+	http.Handle("/sendRecvBlob", websocket.Handler(sendRecvBinaryServer))
+	http.Handle("/json", websocket.Handler(jsonServer))
+	//http.HandleFunc("/", MainServer)
+	//println(serverAddr)
+	fmt.Printf("ws://%v:%v/\n", serverAddr, serverPort)
+	//fmt.Printf("http://%v:%v/\n", webAddr, webPort)
+	err := http.ListenAndServe(":9055", nil)
 	if err != nil {
 		panic("ListenANdServe: " + err.Error())
 	}

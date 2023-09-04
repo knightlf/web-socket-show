@@ -1,14 +1,23 @@
 {
+  "Ckconfig": {
+    "host": ["192.168.1.99:9000"],
+    "username": "octa",
+    "password": "octa8lab",
+    "databaseName": "wss",
+    "compressionLevel": 10,
+    "onCluster": "",
+    "userMaxMemUsage": 1073741824
+  },
   "sever": {
-    "svr_addr": "127.0.0.1",
-    "svr_port": "9033"
+    "svr_addr": "192.168.24.20",
+    "svr_port": "9055"
   },
   "log": {
     "log_path": "/var/log/8lab",
     "log_level": "error"
   },
   "web": {
-    "web_port": "9033",
-    "web_addr": "0.0.0.0"
+    "web_port": "9055",
+    "web_addr": "192.168.24.20"
   }
 }
