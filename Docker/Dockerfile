@@ -4,7 +4,7 @@ MAINTAINER devcli-server
 ### sources.list from http://140.143.184.36/ octa main
 #COPY sources.list /etc/apt/sources.list
 RUN mkdir -p /data/devcli/conf
-COPY ./conf/tsconfig.json /data/devcli/conf/
+#COPY ./conf/tsconfig.json /data/devcli/conf/
 COPY ./web-socket-show /data/devcli/
 COPY ./Docker/entrypoint.sh /usr/bin/entrypoint.sh
 #COPY neighbors /iri/conf/neighbors
