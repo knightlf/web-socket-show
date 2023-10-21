@@ -62,7 +62,9 @@ func InsertOper(msg Msg) error {
 	defer conn.Close()
 	ctx := context.Background()
 
-	query := "INSERT  into wss.ws_show_t1(id,select_op,send_value) values (?,?,?)"
+	//query := "INSERT  into wss.ws_show_t1(id,select_op,send_value) values (?,?,?)"
+	query := "INSERT  into ws_show_t1(id,select_op,send_value) values (?,?,?)"
+
 	//stmt, err := conn
 	err = conn.Exec(ctx, query, msg.Id, msg.Select, msg.Send)
 
@@ -97,14 +99,16 @@ func InsertOper(msg Msg) error {
 
 }
 
-//ft: id=2  or  select_op="readWrite"  arg: ft string
+// ft: id=2  or  select_op="readWrite"  arg: ft string
 func SelectOper(ft string) ([]Msg, error) {
 	conn, err := connect()
 	if err != nil {
 		panic((err))
 	}
 
-	query := fmt.Sprintf("SELECT * FROM wss.ws_show_t1 WHERE %s", ft)
+	//query := fmt.Sprintf("SELECT * FROM wss.ws_show_t1 WHERE %s", ft)
+	query := fmt.Sprintf("SELECT * FROM ws_show_t1 WHERE %s", ft)
+
 	//query := fmt.Sprintf("SELECT * FROM wss.ws_show_t1 ")
 	//fmt.Println(query)
 	ctx := context.Background()
@@ -128,7 +132,7 @@ func SelectOper(ft string) ([]Msg, error) {
 
 }
 
-//  clickhouse.Open  <--- driver.Conn,
+// clickhouse.Open  <--- driver.Conn,
 func connect() (driver.Conn, error) {
 	ConfigInit()
 	//conn := clickhouse.OpenDB(&clickhouse.Options{
