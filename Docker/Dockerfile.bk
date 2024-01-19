@@ -1,31 +1,11 @@
-FROM octahub.8lab.cn:5000/base/ubt22-go:1.21.5 as builder
-ADD ./ /data/go/src/web-socket-show
-ENV GO111MODULE on
-ENV GOPROXY https://goproxy.cn,direct
-RUN apt-get update && apt-get install -y ca-certificates openssl 
-WORKDIR /data/go/src/web-socket-show
-#RUN go mod tidy && go build -ldflags -s -trimpath -v -o web-socket-show ws_server.go 
-RUN go build -o /data/go/src/web-socket-show/web-socket-show /data/go/src/web-socket-show/ws_server.go
-
-#FROM octahub.8lab.cn:5000/base/ubuntu:22.04
-#COPY --chown=bsc config /usr/local/bsc/config
-#COPY --chown=bsc bin/ /usr/bin/
-#COPY --chown=bsc ./trust-bsc/cmd/geth/trustconfig.json /data/node/conf/ 
-#COPY --from=builder --chown=bsc /data/go/bin/geth /usr/bin/
-#RUN chown -R bsc:bsc /data/
-#USER bsc
-#EXPOSE 8545 30303 
-#ENTRYPOINT ["entrypoint.sh"]
-
 #FROM octahub.8lab.cn:5000/base/cicd-go:v1.18.2
-FROM octahub.8lab.cn:5000/base/ubuntu:22.04
+FROM octahub.8lab.cn:5000/base/ubuntu:18.04
 MAINTAINER devcli-server
 ### sources.list from http://140.143.184.36/ octa main
 #COPY sources.list /etc/apt/sources.list
 RUN mkdir -p /data/devcli/conf
-COPY ./Docker/tsconfig.json /data/devcli/conf/
-COPY --from=builder  /data/go/src/web-socket-show/web-socket-show /data/devcli/
-#COPY ./web-socket-show /data/devcli/
+#COPY ./conf/tsconfig.json /data/devcli/conf/
+COPY ./web-socket-show /data/devcli/
 COPY ./Docker/entrypoint.sh /usr/bin/entrypoint.sh
 #COPY neighbors /iri/conf/neighbors
 

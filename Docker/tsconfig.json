@@ -1,0 +1,27 @@
+{
+    "ckconfig": {
+      "host": ["192.168.1.98:9000"],
+      "username": "xxx",
+      "password": "xxx",
+      "databaseName": "wss",
+      "compressionLevel": 10,
+      "onCluster": "",
+      "userMaxMemUsage": 1073741824
+    },
+    "sever": {
+      "svr_addr": "0.0.0.0",
+      "svr_port": "9055"
+    },
+    "log": {
+      "log_path": "/var/log/8lab",
+      "log_level": "error"
+    },
+    "web": {
+      "web_port": "22014",
+      "web_addr": "0.0.0.0"
+    },
+    "store": {
+      "path": "/data",
+      "store_type": "local"
+    }
+  }
