@@ -389,7 +389,7 @@ function send() {
 <option value="/readWrite">/readWrite</option>
 <option value="/sendRecvText">/sendRecvText</option>
 <option value="/sendRecvArrayBuffer">/sendRecvArrayBuffer</option>
-<option value="/sendRecvBlob">/sendSun</option>
+<option value="/sendRecvBlob">/sendSun1</option>
 <option value="/json">/json</option>
 </select>
 <input class="input-text" type="text" name="message" size="80" value="" />
